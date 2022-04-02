@@ -27,7 +27,6 @@ db.setDatabaseName(db_filename)
 
 db.open()
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -43,11 +42,14 @@ class MainWindow(QMainWindow):
         button_delete_db = QPushButton("Delete Database")
         button_query_db = QPushButton("Query Database")
         button_insert_tag_db = QPushButton("Insert Tag")
+
         button_close_app = QPushButton("Close App")
 
         self.insert_tag = QLineEdit()
+
+        self.insert_tag.returnPressed.connect(self.add_tag)
         #self.insert_tag.textEdited.connect(self.update_tags)
-        self.insert_tag.textChanged.connect(self.update_tags)
+        #self.insert_tag.textChanged.connect(self.update_tags)
 
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
@@ -103,6 +105,8 @@ class MainWindow(QMainWindow):
 
         button_close_app.clicked.connect(self.close_app_button)
 
+        #button_insert_tag_db.clicked.connect(self.insert_tag_db_button)
+
         self.setFixedSize(QSize(800, 600))
 
         widget = QWidget()
@@ -112,35 +116,29 @@ class MainWindow(QMainWindow):
         #self.setCentralWidget(button_db)
         #self.setCentralWidget(button_query)
 
-    def update_tags(self, s):
+    def add_tag(self):
 
-        schema_filename = 'schema.sql'
+        tag = self.insert_tag.text()
 
-        inserts_filename = 'inserts.sql'
+        q_string = "insert into one_m_tags (tag) values ('" + tag + "');"
+        #"INSERT INTO one_m_tags (tag) VALUES '{tag}'"
 
-        db_is_new = not os.path.exists(db_filename)
+        print(q_string)
+        query = QSqlQuery()
 
-        conn = sqlite3.connect(db_filename)
+        #query.prepare("INSERT INTO one_m_tags (tag) VALUES ':tag_';")
+        #query.bindValue(":tag_", tag)
+        #query.exec_(q_string)
+        query.exec_(q_string)
 
-        with open(inserts_filename, 'rt') as f:
-            inserts = f.read()
+        #conn.execute(q_string)
 
-        tag = s
-        conn.execute("insert into one_m_tags (tag) values (?)",tag)
+        #conn.close()
 
-        conn.close()
+        #db.open()
 
-        self.model_tags.select()
-        #self.model_tags_table.setModel(self.model_tags)
 
-        #self.query = QSqlQuery(db=db)
 
-        #query = QSqlQuery("SELECT one_m_notes.note, one_m_tags.tag from m_m_notes_tags left join one_m_notes on m_m_notes_tags.note_id = one_m_notes.note_id left join one_m_tags on m_m_notes_tags.tag_id = one_m_tags.tag_id where note LIKE '%s' OR tag LIKE '%s'",db=db)
-        #filter_str = 'note LIKE "%{}%"'.format(s)
-        #self.model_tags.query(self)
-        #self.model.query(query)
-
-        self.query_db_button()
 
     def delete_db_button(self):
         os.remove(db_filename)
