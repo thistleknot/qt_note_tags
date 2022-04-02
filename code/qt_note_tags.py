@@ -10,7 +10,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlQuery, QSqlRelationalTab
     QSqlRelationalDelegate, QSqlQueryModel
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QHBoxLayout,QVBoxLayout, QPushButton, QWidget, QTableView,\
-    QStackedLayout, QLineEdit)
+    QStackedLayout, QLineEdit, QLabel)
 
 db_filename = '../data/tagnotes.db'
 
@@ -45,11 +45,11 @@ class MainWindow(QMainWindow):
 
         button_close_app = QPushButton("Close App")
 
+        self.insert_label = QLabel("Insert Tag")
+
         self.insert_tag = QLineEdit()
 
         self.insert_tag.returnPressed.connect(self.add_tag)
-        #self.insert_tag.textEdited.connect(self.update_tags)
-        #self.insert_tag.textChanged.connect(self.update_tags)
 
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
@@ -61,40 +61,31 @@ class MainWindow(QMainWindow):
         self.model_tags.setTable("tags")
         self.model_notes.setTable("notes")
 
-        #self.model = QSqlRelationalTableModel()
-        #self.model = QSqlTableModel()
-        #self.model = QSqlQueryModel()
-
-        stackedLayout = QStackedLayout()
-
         layout_H_left_buttons = QHBoxLayout()
         layout_H_right_tables = QHBoxLayout()
 
-
         layout_V0 = QVBoxLayout()
-        layout_V1 = QVBoxLayout()
-        layout_V2 = QVBoxLayout()
-
-        #layout_H_left_buttons.setContentsMargins(0, 0, 0, 0)
-        #layout_H_left_buttons.setSpacing(20)
-
-        layout_H_left_buttons.addLayout(layout_V0)
         layout_V0.addWidget(button_create_db)
         layout_V0.addWidget(button_delete_db)
         layout_V0.addWidget(button_query_db)
+        layout_V0.addWidget(self.insert_label)
+        self.insert_label.setAlignment(Qt.AlignBottom)
+
         layout_V0.addWidget(self.insert_tag)
+        self.insert_tag.setAlignment(Qt.AlignTop)
+        layout_V0.addWidget(button_close_app)
+
+        layout_H_left_buttons.addLayout(layout_V0)
+
 
         layout_H_left_buttons.addLayout(layout_H_right_tables)
-        #layout_H_right_tables.addLayout(layout_V1)
+
         layout_H_right_tables.addWidget(self.model_tags_table)
         layout_H_right_tables.addWidget(self.table_rtag)
 
-        #layout_V1.addWidget(self.table_rtag)
-        #layout_V1.addLayout(layout_V2)
         layout_H_right_tables.addWidget(self.table_rnote)
 
         layout_H_right_tables.addWidget(self.model_notes_table)
-        layout_V0.addWidget(button_close_app)
 
         #connect to a function
         button_create_db.clicked.connect(self.create_db_button)
@@ -104,8 +95,6 @@ class MainWindow(QMainWindow):
         button_query_db.clicked.connect(self.query_db_button)
 
         button_close_app.clicked.connect(self.close_app_button)
-
-        #button_insert_tag_db.clicked.connect(self.insert_tag_db_button)
 
         self.setFixedSize(QSize(800, 600))
 
@@ -118,27 +107,22 @@ class MainWindow(QMainWindow):
 
     def add_tag(self):
 
+        if db.isOpen():
+            db.close()
+
+        conn = sqlite3.connect(db_filename)
+
         tag = self.insert_tag.text()
 
+        #I can't get PyQT5 query to work
+
         q_string = "insert into one_m_tags (tag) values ('" + tag + "');"
-        #"INSERT INTO one_m_tags (tag) VALUES '{tag}'"
+        with sqlite3.connect(db_filename) as conn:
+            conn.executescript(q_string)
 
-        print(q_string)
-        query = QSqlQuery()
+        conn.close()
 
-        #query.prepare("INSERT INTO one_m_tags (tag) VALUES ':tag_';")
-        #query.bindValue(":tag_", tag)
-        #query.exec_(q_string)
-        query.exec_(q_string)
-
-        #conn.execute(q_string)
-
-        #conn.close()
-
-        #db.open()
-
-
-
+        db.open()
 
     def delete_db_button(self):
         os.remove(db_filename)
