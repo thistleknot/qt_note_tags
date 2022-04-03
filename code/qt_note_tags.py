@@ -38,12 +38,12 @@ class MainWindow(QMainWindow):
         self.model_tags = QSqlTableModel(db=db)
         self.model_notes = QSqlTableModel(db=db)
 
-        button_create_db = QPushButton("Create Database")
-        button_delete_db = QPushButton("Delete Database")
-        button_query_db = QPushButton("Query Database")
-        button_insert_tag_db = QPushButton("Insert Tag")
+        self.button_create_db = QPushButton("Create Database")
+        self.button_delete_db = QPushButton("Delete Database")
+        self.button_query_db = QPushButton("Query Database")
+        self.button_insert_tag_db = QPushButton("Insert Tag")
 
-        button_close_app = QPushButton("Close App")
+        self.button_close_app = QPushButton("Close App")
 
         self.insert_label = QLabel("Insert Tag")
 
@@ -65,21 +65,20 @@ class MainWindow(QMainWindow):
         layout_H_right_tables = QHBoxLayout()
 
         layout_V0 = QVBoxLayout()
-        layout_V0.addWidget(button_create_db)
-        layout_V0.addWidget(button_delete_db)
-        layout_V0.addWidget(button_query_db)
+        layout_V0.addWidget(self.button_create_db)
+        layout_V0.addWidget(self.button_delete_db)
+        layout_V0.addWidget(self.button_query_db)
         layout_V0.addWidget(self.insert_label)
         self.insert_label.setAlignment(Qt.AlignBottom)
 
         layout_V0.addWidget(self.insert_tag)
         self.insert_tag.setAlignment(Qt.AlignTop)
-        layout_V0.addWidget(button_close_app)
+        layout_V0.addWidget(self.button_close_app)
 
         layout_H_left_buttons.addLayout(layout_V0)
 
-
         layout_H_left_buttons.addLayout(layout_H_right_tables)
-
+        
         layout_H_right_tables.addWidget(self.model_tags_table)
         layout_H_right_tables.addWidget(self.table_rtag)
 
@@ -88,13 +87,13 @@ class MainWindow(QMainWindow):
         layout_H_right_tables.addWidget(self.model_notes_table)
 
         #connect to a function
-        button_create_db.clicked.connect(self.create_db_button)
+        self.button_create_db.clicked.connect(self.create_db_button)
 
-        button_delete_db.clicked.connect(self.delete_db_button)
+        self.button_delete_db.clicked.connect(self.delete_db_button)
 
-        button_query_db.clicked.connect(self.query_db_button)
+        self.button_query_db.clicked.connect(self.query_db_button)
 
-        button_close_app.clicked.connect(self.close_app_button)
+        self.button_close_app.clicked.connect(self.close_app_button)
 
         self.setFixedSize(QSize(800, 600))
 
