@@ -53,8 +53,10 @@ class MainWindow(QMainWindow):
         self.insert_tag.returnPressed.connect(self.add_tag)
 
         self.filter_list_tags = QListWidget()
+        self.filter_list_note = QListWidget()
 
         self.filter_list_tags.itemSelectionChanged.connect(self.filter_by_tag)
+        self.filter_list_note.itemSelectionChanged.connect(self.filter_by_note)
 
         self.model_tags_table = QTableView()
 
@@ -67,7 +69,19 @@ class MainWindow(QMainWindow):
         self.model_tags.setTable("tags")
         self.model_notes.setTable("notes")
 
+        layout_V_top_not_notes = QVBoxLayout()
+
         layout_H_left_buttons = QHBoxLayout()
+
+        layout_V_bottom_notes = QVBoxLayout()
+        layout_H_bottom_notes = QHBoxLayout()
+        layout_V_bottom_note = QVBoxLayout()
+
+        layout_V_top_not_notes.addLayout(layout_H_left_buttons)
+        layout_V_top_not_notes.addLayout(layout_H_bottom_notes)
+        layout_H_bottom_notes.addLayout(layout_V_bottom_notes)
+        layout_V_top_not_notes.addLayout(layout_V_bottom_note)
+
         layout_H_right_tables = QHBoxLayout()
 
         layout_V0 = QVBoxLayout()
@@ -87,10 +101,14 @@ class MainWindow(QMainWindow):
 
         layout_H_right_tables.addWidget(self.filter_list_tags)
         layout_H_right_tables.addWidget(self.model_tags_table)
-        layout_H_right_tables.addWidget(self.table_rtag)
+        #layout_H_right_tables.addWidget(self.table_rtag)
 
-        layout_H_right_tables.addWidget(self.table_rnote)
-        layout_H_right_tables.addWidget(self.table_rtitle)
+        layout_H_bottom_notes.addWidget(self.table_rtitle)
+
+        layout_H_bottom_notes.addWidget(self.table_rnote)
+        layout_H_bottom_notes.addWidget(self.filter_list_note)
+        #layout_H_right_tables.addWidget(self.table_rnote)
+        #layout_H_right_tables.addWidget(self.table_rtitle)
 
         layout_H_right_tables.addWidget(self.model_notes_table)
 
@@ -106,7 +124,7 @@ class MainWindow(QMainWindow):
         self.setFixedSize(QSize(800, 600))
 
         widget = QWidget()
-        widget.setLayout(layout_H_left_buttons)
+        widget.setLayout(layout_V_top_not_notes)
         self.setCentralWidget(widget)
         # Set the central widget of the Window.
         #self.setCentralWidget(button_db)
@@ -130,6 +148,8 @@ class MainWindow(QMainWindow):
         conn.close()
 
         db.open()
+
+        self.query_db_button()
 
     def delete_db_button(self):
         os.remove(db_filename)
@@ -188,6 +208,7 @@ class MainWindow(QMainWindow):
         self.model_tags.select()
         self.model_notes.select()
 
+        self.filter_list_tags.clear()
         #populate tag filter list
         for row in range(self.model_tags.rowCount()):
             #for column in range(self.model_tags.columnCount()):
@@ -202,6 +223,7 @@ class MainWindow(QMainWindow):
         #self.model.setQuery(query)
 
     def filter_by_tag(self):
+
         #if count(self.filter_list_tags.selectedItems)>0:
 
         self.model_rtag.setTable("m_m_notes_tags")
@@ -226,7 +248,6 @@ class MainWindow(QMainWindow):
 
         self.model_rnote.setRelation(1, QSqlRelation("one_m_tags",
                                                "tag_id", "tag"))
-
 
 
         selected_tag_filter = self.filter_list_tags.currentItem().text()
@@ -260,6 +281,26 @@ class MainWindow(QMainWindow):
         self.model_rtag.removeColumn(0)
         #self.model_rtitle.removeColumn(1)
         #self.model_rnote.removeColumn(1)
+
+        #need to reference by tag
+        self.filter_list_note.clear()
+        # populate tag filter list
+
+        #populate notes filter
+
+        self.filter_list_note.clear()
+        #populate tag filter list
+        #temp_model = self.table_rnote.model()
+        for row in range(self.model_rnote.rowCount()):
+            #for column in range(self.model_tags.columnCount()):
+            #skip column 0 which is id
+            index = self.model_rnote.index(row, 0)
+            #print(self.model_rtag.index(row, column).data())
+            text = self.model_rnote.data(index)
+            self.filter_list_note.addItem(text)
+
+    def filter_by_note(self):
+        print("hi")
 
 #event loop
 app = QApplication(sys.argv)
