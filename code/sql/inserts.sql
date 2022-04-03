@@ -1,9 +1,6 @@
---insert into one_m_notes (note) values ('first test','initial test notes');
---insert into one_m_notes (note) values ('second test', 'more test notes');
---insert into one_m_notes (note) values ('two tag test', 'this is an interesting test');
-insert into one_m_notes (note) values ('initial test notes');
-insert into one_m_notes (note) values ('more test notes');
-insert into one_m_notes (note) values ('this is an interesting test');
+insert into one_m_notes (title, note) values ('first test','initial test notes');
+insert into one_m_notes (title, note) values ('second test', 'more test notes');
+insert into one_m_notes (title, note) values ('two tag test', 'this is an interesting test');
 
 insert into one_m_tags (tag) values ('test');
 insert into one_m_tags (tag) values ('interesting');

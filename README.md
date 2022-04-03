@@ -22,6 +22,11 @@ App idea
 	
 	migrate from pyqt5 to tkinter
 
+Implemented
+    2022-04-02
+        all the core features are working, at least in terms of filtering (based on the selected tag).
+        I just need to add a QTextEdit to allow capturing new notes (i.e. a note field right joined to the tags and union'ed with the bridge table)
+
 Future Features
 
 	I'm trying to figure out how best to show notes.
@@ -62,12 +67,7 @@ Future Features
 	Bug
 		Can't filter notes appropriately, when I remove column, it drops 
 
-	2022-04-02
-		all the core features are working, at least in terms of filtering (based on the selected tag).
-		I just need to add a QTextEdit to allow capturing new notes (i.e. a note field right joined to the tags and union'ed with the bridge table)
-
-
-
+	Need to add title's to note table in my schema.
 
 
 synonyms

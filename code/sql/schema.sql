@@ -1,6 +1,6 @@
 create table one_m_notes (
     note_id integer PRIMARY KEY autoincrement not null,
-    --title TEXT,
+    title TEXT,
     note TEXT
     );
 

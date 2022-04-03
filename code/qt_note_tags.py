@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
 
         self.model_rtag = QSqlRelationalTableModel(db=db)
         self.model_rnote = QSqlRelationalTableModel(db=db)
+        self.model_rtitle = QSqlRelationalTableModel(db=db)
 
         self.model_tags = QSqlTableModel(db=db)
         self.model_notes = QSqlTableModel(db=db)
@@ -59,6 +60,7 @@ class MainWindow(QMainWindow):
 
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
+        self.table_rtitle = QTableView()
 
         self.model_notes_table = QTableView()
 
@@ -88,6 +90,7 @@ class MainWindow(QMainWindow):
         layout_H_right_tables.addWidget(self.table_rtag)
 
         layout_H_right_tables.addWidget(self.table_rnote)
+        layout_H_right_tables.addWidget(self.table_rtitle)
 
         layout_H_right_tables.addWidget(self.model_notes_table)
 
@@ -203,6 +206,7 @@ class MainWindow(QMainWindow):
 
         self.model_rtag.setTable("m_m_notes_tags")
         self.model_rnote.setTable("m_m_notes_tags")
+        self.model_rtitle.setTable("m_m_notes_tags")
 
         self.model_rtag.setRelation(0, QSqlRelation("one_m_notes", "note_id",
                                                "note"))
@@ -211,11 +215,19 @@ class MainWindow(QMainWindow):
                                                "tag_id", "tag"))
 
 
+        self.model_rtitle.setRelation(0, QSqlRelation("one_m_notes", "note_id",
+                                               "title"))
+
+        self.model_rtitle.setRelation(1, QSqlRelation("one_m_tags",
+                                   "tag_id", "tag"))
+
         self.model_rnote.setRelation(0, QSqlRelation("one_m_notes", "note_id",
-                                               "note"))
+                                                     "note"))
 
         self.model_rnote.setRelation(1, QSqlRelation("one_m_tags",
                                                "tag_id", "tag"))
+
+
 
         selected_tag_filter = self.filter_list_tags.currentItem().text()
         print(selected_tag_filter)
@@ -227,25 +239,27 @@ class MainWindow(QMainWindow):
 
             #filter rnote by tag
         self.model_rtag.setFilter(filter_str)
+        self.model_rtitle.setFilter(filter_str)
         self.model_rnote.setFilter(filter_str)
 
-        delegate = QSqlRelationalDelegate(self.table_rtag.setModel(self.model_rtag))
-        delegate1 = QSqlRelationalDelegate(self.table_rnote.setModel(self.model_rnote))
+        delegate0 = QSqlRelationalDelegate(self.table_rtag.setModel(self.model_rtag))
+        delegate1 = QSqlRelationalDelegate(self.table_rtitle.setModel(self.model_rtitle))
+        delegate2 = QSqlRelationalDelegate(self.table_rnote.setModel(self.model_rnote))
 
-        self.table_rtag.setItemDelegate(delegate)
-        self.table_rnote.setItemDelegate(delegate1)
+        self.table_rtag.setItemDelegate(delegate0)
+        self.table_rtitle.setItemDelegate(delegate1)
+        self.table_rnote.setItemDelegate(delegate2)
 
         #columns_to_remove = ['tag']
 
         self.model_rtag.select()
+        self.model_rtitle.select()
         self.model_rnote.select()
 
         #remove after filter, after select
         self.model_rtag.removeColumn(0)
+        #self.model_rtitle.removeColumn(1)
         #self.model_rnote.removeColumn(1)
-
-
-
 
 #event loop
 app = QApplication(sys.argv)
