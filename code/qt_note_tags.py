@@ -9,8 +9,8 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlQuery, QSqlRelationalTableModel, QSqlTableModel, \
     QSqlRelationalDelegate, QSqlQueryModel
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QHBoxLayout,QVBoxLayout, QPushButton, QWidget, QTableView,\
-    QStackedLayout, QLineEdit, QLabel)
+    QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTableView,\
+    QStackedLayout, QLineEdit, QLabel, QListWidget)
 
 db_filename = '../data/tagnotes.db'
 
@@ -51,11 +51,13 @@ class MainWindow(QMainWindow):
 
         self.insert_tag.returnPressed.connect(self.add_tag)
 
+        self.filter_list_tags = QListWidget()
+
+        self.model_tags_table = QTableView()
+
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
 
-        # tags/notes
-        self.model_tags_table = QTableView()
         self.model_notes_table = QTableView()
 
         self.model_tags.setTable("tags")
@@ -78,7 +80,8 @@ class MainWindow(QMainWindow):
         layout_H_left_buttons.addLayout(layout_V0)
 
         layout_H_left_buttons.addLayout(layout_H_right_tables)
-        
+
+        layout_H_right_tables.addWidget(self.filter_list_tags)
         layout_H_right_tables.addWidget(self.model_tags_table)
         layout_H_right_tables.addWidget(self.table_rtag)
 
@@ -196,6 +199,7 @@ class MainWindow(QMainWindow):
         #for n in columns_to_remove:
             #idx = self.model.fieldIndex(n)
         self.model_rtag.removeColumns(0, 1)
+
         self.model_rnote.removeColumns(1, 1)
 
         delegate = QSqlRelationalDelegate(self.table_rtag.setModel(self.model_rtag))
@@ -211,6 +215,16 @@ class MainWindow(QMainWindow):
 
         self.model_tags.select()
         self.model_notes.select()
+
+        #populate tag filter list
+        for row in range(self.model_tags.rowCount()):
+            #for column in range(self.model_tags.columnCount()):
+            #skip column 0 which is id
+            index = self.model_tags.index(row, 1)
+            #print(self.model_rtag.index(row, column).data())
+            text = self.model_tags.data(index)
+            self.filter_list_tags.addItem(text)
+
         #query = QSqlQuery("SELECT one_m_notes.note, one_m_tags.tag from m_m_notes_tags left join one_m_notes on m_m_notes_tags.note_id = one_m_notes.note_id left join one_m_tags on m_m_notes_tags.tag_id = one_m_tags.tag_id",db=db)
 
         #self.model.setQuery(query)

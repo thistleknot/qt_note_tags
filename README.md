@@ -20,7 +20,6 @@ App idea
 	pyqt5
 	sqlite3
 	
-	
 	migrate from pyqt5 to tkinter
 
 Future Features
@@ -38,6 +37,19 @@ Future Features
 	https://doc.qt.io/qt-5/sql-presenting.html
 
 	Ability to type notes, title, choose tags from drop down, if not exists, then input new tags up to multiple tags.
+
+	separate tag and note bridge items from the query function and make it part of a text changed from the filter
+
+	So the order of operations is
+
+	events based on actions
+	delete button
+	create button
+	query button
+		populate just tags and notes dimensions but not the bridge table
+		populate filter
+	select tag in filter QWidgetList
+		generate bridge results with filter applied
 
 synonyms
 	tags
