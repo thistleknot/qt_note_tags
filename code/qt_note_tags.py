@@ -53,6 +53,8 @@ class MainWindow(QMainWindow):
 
         self.filter_list_tags = QListWidget()
 
+        self.filter_list_tags.itemSelectionChanged.connect(self.filter_by_tag)
+
         self.model_tags_table = QTableView()
 
         self.table_rtag = QTableView()
@@ -177,10 +179,30 @@ class MainWindow(QMainWindow):
         self.model_tags_table.setSortingEnabled(1)# .setSort(0, Qt.DescendingOrder)
         self.model_notes_table.setSortingEnabled(1)#
 
-        self.model_rtag.setTable("m_m_notes_tags")
-        self.model_rnote.setTable("m_m_notes_tags")
         self.model_tags.setTable("one_m_tags")
         self.model_notes.setTable("one_m_notes")
+
+        self.model_tags.select()
+        self.model_notes.select()
+
+        #populate tag filter list
+        for row in range(self.model_tags.rowCount()):
+            #for column in range(self.model_tags.columnCount()):
+            #skip column 0 which is id
+            index = self.model_tags.index(row, 1)
+            #print(self.model_rtag.index(row, column).data())
+            text = self.model_tags.data(index)
+            self.filter_list_tags.addItem(text)
+
+        #query = QSqlQuery("SELECT one_m_notes.note, one_m_tags.tag from m_m_notes_tags left join one_m_notes on m_m_notes_tags.note_id = one_m_notes.note_id left join one_m_tags on m_m_notes_tags.tag_id = one_m_tags.tag_id",db=db)
+
+        #self.model.setQuery(query)
+
+    def filter_by_tag(self):
+        #if count(self.filter_list_tags.selectedItems)>0:
+
+        self.model_rtag.setTable("m_m_notes_tags")
+        self.model_rnote.setTable("m_m_notes_tags")
 
         self.model_rtag.setRelation(0, QSqlRelation("one_m_notes", "note_id",
                                                "note"))
@@ -212,22 +234,6 @@ class MainWindow(QMainWindow):
 
         self.model_rtag.select()
         self.model_rnote.select()
-
-        self.model_tags.select()
-        self.model_notes.select()
-
-        #populate tag filter list
-        for row in range(self.model_tags.rowCount()):
-            #for column in range(self.model_tags.columnCount()):
-            #skip column 0 which is id
-            index = self.model_tags.index(row, 1)
-            #print(self.model_rtag.index(row, column).data())
-            text = self.model_tags.data(index)
-            self.filter_list_tags.addItem(text)
-
-        #query = QSqlQuery("SELECT one_m_notes.note, one_m_tags.tag from m_m_notes_tags left join one_m_notes on m_m_notes_tags.note_id = one_m_notes.note_id left join one_m_tags on m_m_notes_tags.tag_id = one_m_tags.tag_id",db=db)
-
-        #self.model.setQuery(query)
 
 
 #event loop
