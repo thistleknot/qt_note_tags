@@ -53,10 +53,10 @@ class MainWindow(QMainWindow):
         self.insert_tag.returnPressed.connect(self.add_tag)
 
         self.filter_list_tags = QListWidget()
-        self.filter_list_note = QListWidget()
+        self.filter_list_note_title = QListWidget()
 
         self.filter_list_tags.itemSelectionChanged.connect(self.filter_by_tag)
-        self.filter_list_note.itemSelectionChanged.connect(self.filter_by_note)
+        self.filter_list_note_title.itemSelectionChanged.connect(self.filter_by_note)
 
         self.model_tags_table = QTableView()
 
@@ -106,7 +106,7 @@ class MainWindow(QMainWindow):
         layout_H_bottom_notes.addWidget(self.table_rtitle)
 
         layout_H_bottom_notes.addWidget(self.table_rnote)
-        layout_H_bottom_notes.addWidget(self.filter_list_note)
+        layout_H_bottom_notes.addWidget(self.filter_list_note_title)
         #layout_H_right_tables.addWidget(self.table_rnote)
         #layout_H_right_tables.addWidget(self.table_rtitle)
 
@@ -283,21 +283,21 @@ class MainWindow(QMainWindow):
         #self.model_rnote.removeColumn(1)
 
         #need to reference by tag
-        self.filter_list_note.clear()
+        self.filter_list_note_title.clear()
         # populate tag filter list
 
         #populate notes filter
 
-        self.filter_list_note.clear()
+        self.filter_list_note_title.clear()
         #populate tag filter list
         #temp_model = self.table_rnote.model()
-        for row in range(self.model_rnote.rowCount()):
+        for row in range(self.model_rtitle.rowCount()):
             #for column in range(self.model_tags.columnCount()):
             #skip column 0 which is id
-            index = self.model_rnote.index(row, 0)
+            index = self.model_rtitle.index(row, 0)
             #print(self.model_rtag.index(row, column).data())
-            text = self.model_rnote.data(index)
-            self.filter_list_note.addItem(text)
+            text = self.model_rtitle.data(index)
+            self.filter_list_note_title.addItem(text)
 
     def filter_by_note(self):
         print("hi")
