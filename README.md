@@ -51,6 +51,25 @@ Future Features
 	select tag in filter QWidgetList
 		generate bridge results with filter applied
 
+
+	all the core features are working, at least in terms of filtering (based on the selected tag).
+
+	I just need to add a QTextEdit to allow capturing new notes (i.e. a note field right joined to the tags and union'ed with the bridge table)
+
+
+	Notes should be horizontally printed under all columns
+
+	Bug
+		Can't filter notes appropriately, when I remove column, it drops 
+
+	2022-04-02
+		all the core features are working, at least in terms of filtering (based on the selected tag).
+		I just need to add a QTextEdit to allow capturing new notes (i.e. a note field right joined to the tags and union'ed with the bridge table)
+
+
+
+
+
 synonyms
 	tags
 		eg.

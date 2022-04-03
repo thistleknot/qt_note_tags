@@ -30,7 +30,7 @@ db.open()
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("My App")
+        self.setWindowTitle("qt_note_tags")
 
         self.model_rtag = QSqlRelationalTableModel(db=db)
         self.model_rnote = QSqlRelationalTableModel(db=db)
@@ -217,12 +217,17 @@ class MainWindow(QMainWindow):
         self.model_rnote.setRelation(1, QSqlRelation("one_m_tags",
                                                "tag_id", "tag"))
 
-        #columns_to_remove = ['tag']
-        #for n in columns_to_remove:
-            #idx = self.model.fieldIndex(n)
-        self.model_rtag.removeColumns(0, 1)
+        selected_tag_filter = self.filter_list_tags.currentItem().text()
+        print(selected_tag_filter)
 
-        self.model_rnote.removeColumns(1, 1)
+        filter_str = 'tag = "{}"'.format(selected_tag_filter)
+        print(filter_str)
+        #for row in range(len(self.filter_list_tags.selectedItems())):
+            #filter_str = self.filter_list_tags.selectedItems().index(row)
+
+            #filter rnote by tag
+        self.model_rtag.setFilter(filter_str)
+        self.model_rnote.setFilter(filter_str)
 
         delegate = QSqlRelationalDelegate(self.table_rtag.setModel(self.model_rtag))
         delegate1 = QSqlRelationalDelegate(self.table_rnote.setModel(self.model_rnote))
@@ -234,6 +239,12 @@ class MainWindow(QMainWindow):
 
         self.model_rtag.select()
         self.model_rnote.select()
+
+        #remove after filter, after select
+        self.model_rtag.removeColumn(0)
+        #self.model_rnote.removeColumn(1)
+
+
 
 
 #event loop
