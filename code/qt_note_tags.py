@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
         self.model_tags = QSqlTableModel(db=db)
         self.model_notes = QSqlTableModel(db=db)
 
+
         self.button_create_db = QPushButton("Create Database")
         self.button_delete_db = QPushButton("Delete Database")
         self.button_query_db = QPushButton("Query Database")
@@ -56,9 +57,12 @@ class MainWindow(QMainWindow):
         self.filter_list_note_title = QListWidget()
 
         self.filter_list_tags.itemSelectionChanged.connect(self.filter_by_tag)
-        self.filter_list_note_title.itemSelectionChanged.connect(self.filter_by_note)
+        self.filter_list_note_title.itemSelectionChanged.connect(self.filter_by_note_title)
 
         self.model_tags_table = QTableView()
+
+        self.table_note_edit = QTableView()
+        self.model_note_edit = QSqlTableModel(db=db)
 
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
@@ -81,6 +85,7 @@ class MainWindow(QMainWindow):
         layout_V_top_not_notes.addLayout(layout_H_bottom_notes)
         layout_H_bottom_notes.addLayout(layout_V_bottom_notes)
         layout_V_top_not_notes.addLayout(layout_V_bottom_note)
+        layout_V_bottom_note.addWidget(self.table_note_edit)
 
         layout_H_right_tables = QHBoxLayout()
 
@@ -282,10 +287,6 @@ class MainWindow(QMainWindow):
         #self.model_rtitle.removeColumn(1)
         #self.model_rnote.removeColumn(1)
 
-        #need to reference by tag
-        self.filter_list_note_title.clear()
-        # populate tag filter list
-
         #populate notes filter
 
         self.filter_list_note_title.clear()
@@ -299,8 +300,21 @@ class MainWindow(QMainWindow):
             text = self.model_rtitle.data(index)
             self.filter_list_note_title.addItem(text)
 
-    def filter_by_note(self):
-        print("hi")
+    def filter_by_note_title(self):
+
+        self.table_note_edit.setModel(self.model_note_edit)
+        self.model_note_edit.setTable("one_m_notes")
+        #self.model_note_edit.select()
+
+        selected_note_title_filter = self.filter_list_note_title.currentItem().text()
+        filter_str = 'title = "{}"'.format(selected_note_title_filter)
+
+        self.model_note_edit.setFilter(filter_str)
+        self.model_note_edit.removeColumn(1)
+        self.model_note_edit.removeColumn(0)
+        self.model_note_edit.select()
+
+        #print("hi")
 
 #event loop
 app = QApplication(sys.argv)

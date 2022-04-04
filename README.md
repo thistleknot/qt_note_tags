@@ -28,6 +28,9 @@ Implemented
         I just need to add a QTextEdit to allow capturing new notes (i.e. a note field right joined to the tags and union'ed with the bridge table)
 
 Future Features
+	Add QTextEdit to bottom of title filter that displays that note
+
+	Add an input feature for new notes
 
 	I'm trying to figure out how best to show notes.
 
