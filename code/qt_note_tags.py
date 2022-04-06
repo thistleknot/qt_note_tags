@@ -5,11 +5,6 @@ import pandas as pd
 import numpy as np
 import re
 
-import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-
-import PyQt5.QtCore
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlQuery, QSqlRelationalTableModel, QSqlTableModel, \
     QSqlRelationalDelegate, QSqlQueryModel
@@ -32,33 +27,18 @@ db.setDatabaseName(db_filename)
 
 db.open()
 
-class qrt_model(QtCore.QAbstractTableModel):
-    def __init__(self, *args, qrt=None, **kwargs):
-        super(qrt_model, self).__init__(*args, **kwargs)
-        if (qrt == None):
-            self.qrt = QSqlRelationalTableModel(db=db) or []
-        self.qrt = qrt
-        return (self.qrt)
-        #else:
-
-        #def ret(self):
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("qt_note_tags")
 
-        #self.test = qrt_table()
-        self.model_rtag = qrt_model()
-        self.model_rnote = qrt_model()
-        self.model_rtitle = qrt_model()
+        self.model_rtag = QSqlRelationalTableModel(db=db)
+        self.model_rnote = QSqlRelationalTableModel(db=db)
+        self.model_rtitle = QSqlRelationalTableModel(db=db)
 
         self.model_tags = QSqlTableModel(db=db)
-        #self.model_tags_ = qrt_table()
-        #self.model_tags = qrt_table("tags")
-        #self.model_notes = qrt_table().ret
         self.model_notes = QSqlTableModel(db=db)
+
 
         self.button_create_db = QPushButton("Create Database")
         self.button_delete_db = QPushButton("Delete Database")
@@ -83,7 +63,6 @@ class MainWindow(QMainWindow):
 
         self.table_note_edit = QTableView()
         self.model_note_edit = QSqlTableModel(db=db)
-        self.model_note_edit.setEditStrategy(QSqlTableModel.OnRowChange)
 
         self.table_rtag = QTableView()
         self.table_rnote = QTableView()
@@ -91,7 +70,6 @@ class MainWindow(QMainWindow):
 
         self.model_notes_table = QTableView()
 
-        #self.model_tags.
         self.model_tags.setTable("tags")
         self.model_notes.setTable("notes")
 
