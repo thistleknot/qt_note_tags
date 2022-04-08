@@ -310,8 +310,8 @@ class MainWindow(QMainWindow):
         filter_str = 'title = "{}"'.format(selected_note_title_filter)
 
         self.model_note_edit.setFilter(filter_str)
-        self.model_note_edit.removeColumn(1)
-        self.model_note_edit.removeColumn(0)
+        #self.model_note_edit.removeColumn(1)
+        #self.model_note_edit.removeColumn(0)
         self.model_note_edit.select()
 
         #print("hi")
