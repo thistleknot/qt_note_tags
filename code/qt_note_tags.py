@@ -10,7 +10,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlQuery, QSqlRelationalTab
     QSqlRelationalDelegate, QSqlQueryModel
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTableView,\
-    QStackedLayout, QLineEdit, QLabel, QListWidget)
+    QStackedLayout, QLineEdit, QLabel, QListWidget, QDataWidgetMapper, QComboBox, QFormLayout, QSpinBox)
 
 db_filename = '../data/tagnotes.db'
 
@@ -31,6 +31,49 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("qt_note_tags")
+
+        form = QFormLayout()
+
+        self.note_input_id = QSpinBox()
+        self.m_m_input_id = QSpinBox()
+        self.tag_input_id = QSpinBox()
+
+        form.addRow(QLabel("Note ID"), self.note_input_id)
+        form.addRow(QLabel("m to m ID"), self.m_m_input_id)
+        form.addRow(QLabel("Tag ID"), self.tag_input_id)
+
+        #used for inputting new note
+        self.model_note_input = QSqlTableModel(db=db)
+        self.model_m_m_input = QSqlTableModel(db=db)
+        self.model_tag_input = QSqlTableModel(db=db)
+
+        self.mapper_note_input = QDataWidgetMapper()
+        self.mapper_m_m_input = QDataWidgetMapper()
+        self.mapper_tag_input = QDataWidgetMapper()
+
+        self.mapper_note_input.setModel(self.model_note_input)
+        self.mapper_m_m_input.setModel(self.model_m_m_input)
+        self.mapper_tag_input.setModel(self.model_tag_input)
+
+        self.mapper_note_input.addMapping(self.note_input_id, 0)
+        self.mapper_m_m_input.addMapping(self.m_m_input_id, 0)
+        self.mapper_tag_input.addMapping(self.tag_input_id, 0)
+
+        self.model_note_input.setTable("one_m_notes")
+        self.model_m_m_input.setTable("m_m_notes_tags")
+        self.model_tag_input.setTable("one_m_tags")
+
+        #this needs to have tags mapped to a delegate?
+        #how to get a table to work with a QSqlRelationalTableModel which doesn't allow for editing.
+        #need to show bridge table that can be edited.
+        #so option to input new notes
+        #option to input new tags
+        #option to input new m_m between both (likely without lookups)
+
+
+        self.title_input = QLineEdit()
+        self.note_input = QLineEdit()
+        self.tag_input = QComboBox()
 
         self.model_rtag = QSqlRelationalTableModel(db=db)
         self.model_rnote = QSqlRelationalTableModel(db=db)
