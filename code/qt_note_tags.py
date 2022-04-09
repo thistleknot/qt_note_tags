@@ -38,7 +38,15 @@ class MainWindow(QMainWindow):
         self.m_m_input_id = QSpinBox()
         self.tag_input_id = QSpinBox()
 
+        self.title_input = QLineEdit()
+        self.note_input = QLineEdit()
+        self.tag_input = QComboBox()
+        #self.m_m_input_id = QSpinBox()
+
         form.addRow(QLabel("Note ID"), self.note_input_id)
+        form.addRow(QLabel("Title"), self.title_input)
+        form.addRow(QLabel("Note"), self.note_input)
+
         form.addRow(QLabel("m to m ID"), self.m_m_input_id)
         form.addRow(QLabel("Tag ID"), self.tag_input_id)
 
@@ -56,6 +64,11 @@ class MainWindow(QMainWindow):
         self.mapper_tag_input.setModel(self.model_tag_input)
 
         self.mapper_note_input.addMapping(self.note_input_id, 0)
+        self.mapper_note_input.addMapping(self.title_input, 1)
+
+        self.mapper_note_input.addMapping(self.note_input, 2)
+        #self.mapper_note_input.addMapping(self.title_input, 1)
+
         self.mapper_m_m_input.addMapping(self.m_m_input_id, 0)
         self.mapper_tag_input.addMapping(self.tag_input_id, 0)
 
@@ -71,17 +84,12 @@ class MainWindow(QMainWindow):
         #option to input new m_m between both (likely without lookups)
 
 
-        self.title_input = QLineEdit()
-        self.note_input = QLineEdit()
-        self.tag_input = QComboBox()
-
         self.model_rtag = QSqlRelationalTableModel(db=db)
         self.model_rnote = QSqlRelationalTableModel(db=db)
         self.model_rtitle = QSqlRelationalTableModel(db=db)
 
         self.model_tags = QSqlTableModel(db=db)
         self.model_notes = QSqlTableModel(db=db)
-
 
         self.button_create_db = QPushButton("Create Database")
         self.button_delete_db = QPushButton("Delete Database")
@@ -127,6 +135,15 @@ class MainWindow(QMainWindow):
         layout_V_top_not_notes.addLayout(layout_H_left_buttons)
         layout_V_top_not_notes.addLayout(layout_H_bottom_notes)
         layout_H_bottom_notes.addLayout(layout_V_bottom_notes)
+        layout_V_bottom_notes.addLayout(form)
+
+        self.model_tag_input.select()
+        self.model_note_input.select()
+        self.model_m_m_input.select()
+        self.mapper_tag_input.toFirst()
+        self.mapper_note_input.toFirst()
+        self.mapper_m_m_input.toFirst()
+
         layout_V_top_not_notes.addLayout(layout_V_bottom_note)
         layout_V_bottom_note.addWidget(self.table_note_edit)
 
@@ -146,6 +163,7 @@ class MainWindow(QMainWindow):
         layout_H_left_buttons.addLayout(layout_V0)
 
         layout_H_left_buttons.addLayout(layout_H_right_tables)
+
 
         layout_H_right_tables.addWidget(self.filter_list_tags)
         layout_H_right_tables.addWidget(self.model_tags_table)
